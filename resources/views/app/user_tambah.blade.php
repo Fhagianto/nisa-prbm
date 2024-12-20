@@ -79,17 +79,47 @@
 
 
               <div class="form-group">
-                <div class="form-group has-feedback">
-                  <label class="text-dark">Password</label>
-                  <input id="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="current-password">
+    <div class="form-group has-feedback">
+        <label class="text-dark">Password</label>
+        <div class="input-group">
+            <input id="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="current-password">
 
-                  @error('password')
-                  <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-                </div>
-              </div>
+            <!-- Eye Icon to toggle password visibility -->
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                    <i class="fa fa-eye" id="eyeIcon"></i> <!-- Icon to show or hide password -->
+                </button>
+            </div>
+        </div>
+
+        @error('password')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+</div>
+
+<script>
+    // Function to toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+        // Toggle the type of input between password and text
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    });
+</script>
+
 
               <div class="form-group">
                 <div class="form-group has-feedback">

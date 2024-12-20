@@ -9,6 +9,9 @@
 
     <link rel="icon" type="image/png" href="{{ asset('gambar/sistem/gadget.png') }}">
 
+    <!-- Menambahkan CDN Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     <link href="{{ asset('asset_admin/plugins/pg-calendar/css/pignose.calendar.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('asset_admin/plugins/chartist/css/chartist.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset_admin/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css') }}">
@@ -19,121 +22,183 @@
     <link rel="stylesheet" href="{{ asset('assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 
-</head>
-
-<body>
-    <style type="text/css">
-        body{
+    <style>
+        body {
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
-            transition: all .1s ease; 
+            transition: all .1s ease;
         }
-
 
         @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        50% {
-            background-position: 100% 50%;
+
+        .login-form-bg {
+            margin-top: 50px;
         }
-        100% {
-            background-position: 0% 50%;
+
+        .form-control {
+            height: 45px; /* Increase the height of the input fields */
         }
-    }
-</style>
-<div id="preloader">
-    <div class="loader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
-        </svg>
+
+        .login-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .glyphicon-eye-open,
+        .glyphicon-eye-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Styling for the icon inside the password input */
+        .form-group.has-feedback .fa-eye,
+        .form-group.has-feedback .fa-eye-slash {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
     </div>
-</div>
 
-<div class="login-form-bg h-100 mt-5">
-    <div class="container h-100">
-        <div class="row justify-content-center h-100">
-            <div class="col-xl-4">
-                <div class="form-input-content">
-                    <div class="card login-form mb-0">
-                        <div class="card-body pt-5 pb-5">
+    <div class="login-form-bg h-100 mt-5">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100">
+                <div class="col-xl-5">
+                    <div class="form-input-content">
+                        <div class="card login-form mb-0">
+                            <div class="card-body pt-5 pb-5">
+                                <div class="text-center mb-5">
+                                    <img src="{{ asset('gambar/sistem/gadget.png')}}" alt="" style="height: 100px">
+                                    <h3 class="mt-2"><b>Manajemen Keuangan</b></h3>
+                                    <h4 class="mt-4">PRBM Gadget Store</h4>
+                                </div>
 
-                            <div class="text-center mb-5">
-                                <img src="{{ asset('gambar/sistem/gadget.png')}}" alt="" style="height: 100px"> 
-                                <h3 class=" mt-2"><b>Manajemen Keuangan</b></h3>
-                                <h4 class="mt-4"> PRBM Gadget Store </h4>
+                                <h4>Login</h4>
+
+                                <form method="POST" action="{{ route('login') }}">
+                                    @csrf
+
+                                    <div class="form-group">
+                                        <div class="form-group has-feedback">
+                                            <input id="email" type="email" placeholder="Email"
+                                                class="form-control @error('email') is-invalid @enderror" name="email"
+                                                value="{{ old('email') }}" autocomplete="off">
+
+                                            @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-group has-feedback">
+                                            <!-- Input password field -->
+                                            <input id="password" type="password" placeholder="Password"
+                                                class="form-control @error('password') is-invalid @enderror" name="password"
+                                                autocomplete="current-password">
+
+                                            <!-- Error Handling -->
+                                            @error('password')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+
+                                            <!-- Eye Icon to toggle password visibility (Using Font Awesome) -->
+                                            <span class="fas fa-eye" id="eyeIcon" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        // Get the password field and the eye icon
+                                        const passwordInput = document.getElementById('password');
+                                        const eyeIcon = document.getElementById('eyeIcon');
+
+                                        // Toggle password visibility when the icon is clicked
+                                        eyeIcon.addEventListener('click', function () {
+                                            if (passwordInput.type === 'password') {
+                                                passwordInput.type = 'text';  // Show password
+                                                eyeIcon.classList.remove('fa-eye');
+                                                eyeIcon.classList.add('fa-eye-slash');  // Change icon to eye-slash
+                                            } else {
+                                                passwordInput.type = 'password';  // Hide password
+                                                eyeIcon.classList.remove('fa-eye-slash');
+                                                eyeIcon.classList.add('fa-eye');  // Change icon back to eye
+                                            }
+                                        });
+                                    </script>
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                                                {{ old('remember') ? 'checked' : '' }}>
+
+                                            <label class="form-check-label" for="remember">
+                                                {{ __('Remember Me') }}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-block">
+                                            {{ __('LOGIN') }}
+                                        </button>
+
+                                        @if (Route::has('password.request'))
+                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                            {{ __('Forgot Your Password?') }}
+                                        </a>
+                                        @endif
+                                    </div>
+                                </form>
                             </div>
-
-                            <h4>Login</h4>
-
-                            <form method="POST" action="{{ route('login') }}">
-                                @csrf
-
-                                <div class="form-group">
-                                    <div class="form-group has-feedback">
-                                        <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="off">
-
-                                        @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-group has-feedback">
-                                        <input id="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="current-password">
-
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                        <label class="form-check-label" for="remember">
-                                            {{ __('Remember Me') }}
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary btn-block">
-                                        {{ __('LOGIN') }}
-                                    </button>
-
-                                    @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                    @endif
-                                </div>
-                            </form>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-
-<script src="{{ asset('assets/bower_components/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('asset_admin/plugins/common/common.min.js') }}"></script>
-<script src="{{ asset('asset_admin/js/custom.min.js') }}"></script>
-<script src="{{ asset('asset_admin/js/settings.js') }}"></script>
-<script src="{{ asset('asset_admin/js/gleek.js') }}"></script>
-<script src="{{ asset('asset_admin/js/styleSwitcher.js') }}"></script>
+    <script src="{{ asset('assets/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('asset_admin/plugins/common/common.min.js') }}"></script>
+    <script src="{{ asset('asset_admin/js/custom.min.js') }}"></script>
+    <script src="{{ asset('asset_admin/js/settings.js') }}"></script>
+    <script src="{{ asset('asset_admin/js/gleek.js') }}"></script>
+    <script src="{{ asset('asset_admin/js/styleSwitcher.js') }}"></script>
 
 </body>
 </html>

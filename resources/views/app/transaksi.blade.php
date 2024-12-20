@@ -106,10 +106,6 @@
     }
 </script>
 
-
-
-
-
       <div class="table-responsive">
         <table class="table table-bordered" id="table-datatable" style="width: 100%">
           <thead>
